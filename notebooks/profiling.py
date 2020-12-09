@@ -11,7 +11,8 @@ from sherlock import helpers
 from sherlock.features.preprocessing import extract_features, convert_string_lists_to_lists, prepare_feature_extraction
 from sherlock.deploy.train_sherlock import train_sherlock
 from sherlock.deploy.predict_sherlock import predict_sherlock
-
+import warnings
+warnings.filterwarnings("ignore")
 import numbers
 import json
 #'pip install git+git://github.com/clintval/gender_predictor.git'
@@ -111,18 +112,16 @@ def filter_categories(df,column_name):
     else:
         return False
 
-def predict_gender(x):
-    gp = GenderPredictor()
-    gp.train_and_test()
+def predict_gender(x,gp):
     return gp.classify(x)
 
-def preprocess_before_count(tmp,name,gender,age):
+def preprocess_before_count(tmp,name,gender):
     # Preprocess dataframe
     # name = gender = age = country = race = ethnicity = False
-    if age:
+    #if age:
         # If current not categorical, then convert to category
-        if filter_categories(tmp, age):
-            tmp[age] = tmp[age].apply(lambda x: trans_age(x))
+        #if filter_categories(tmp, age):
+        #tmp[age] = tmp[age].apply(lambda x: trans_age(x))
     if name and (gender == False):
         gender = 'Pred'
         # Name attribute exists, but gender attribute not exists
@@ -133,7 +132,7 @@ def preprocess_before_count(tmp,name,gender,age):
     
     return tmp, gender
 
-def process_df(tmp,cand):
+def process_df(tmp,cand,age):
     mup = []
     uncover = set()
     for i in range(1,len(cand)+1):
@@ -143,24 +142,26 @@ def process_df(tmp,cand):
             value = tmp[list(att)].drop_duplicates().values
             for j in value:
                 MUP = True
-                idx = 0
-                c = count.copy()
-                while idx < i:
-                    c = c[j[idx]]
-                    idx += 1
-                if int(c) <= 25:
-                    for z in att:
-                        uncover.add(z)
-                    # No enough case, determine whether MUP
-                    for ele in mup:
-                        if ele in j:
-                            MUP = False
-                    if MUP:
+                for exist_mup in mup:
+                    if all( elt in list(j) for elt in exist_mup):
+                        MUP = False
+                        for z in att:
+                            uncover.add(z)
+                        break
+                if MUP:
+                    idx = 0
+                    c = count.copy()
+                    while idx < i:
+                        c = c[j[idx]]
+                        idx += 1
+                    if int(c) <= 25:
+                        for z in att:
+                            uncover.add(z)
                         mup.append(list(j))
     return mup, uncover
 
 def generate_df(dataset_ID,age,gender,race,ethnicity,country,mup,uncover):
-    tmp_info = pd.DataFrame(columns = ['Dataset_ID','Age','Gender','Race','Ethnicity','Country','MUP','Uncovered Attributes','Report'])
+    tmp_info = pd.DataFrame(columns = ['Dataset_ID','Age','Gender','Race','Ethnicity','Country','Maximal Uncovered Pattern(Sensitive)','Uncovered Attributes','Report'])
     tmp_info.at[0,'Dataset_ID'] = dataset_ID
     if age:
         tmp_info.at[0,'Age'] = 'Exist'
@@ -184,8 +185,11 @@ def generate_df(dataset_ID,age,gender,race,ethnicity,country,mup,uncover):
         tmp_info.at[0,'Country'] = 'Exist'
     else:
         tmp_info.at[0,'Country'] = 'Not Exist'
-    #tmp_info.at[0,'Maximal Uncovered Pattern'] = mup
-    tmp_info.at[0,'Uncovered Attributes'] = uncover
+    tmp_info.at[0,'Maximal Uncovered Pattern(Sensitive)'] = mup
+    if len(uncover) == 0:
+        tmp_info.at[0,'Uncovered Attributes'] = None
+    else:
+        tmp_info.at[0,'Uncovered Attributes'] = uncover
     tmp_info.at[0,'Report'] = 'report/'+dataset_ID+'.html'
     return tmp_info
     
@@ -198,5 +202,35 @@ def read_info(path):
     info = info.style.format({'Report': make_clickable})
     return info
 
+def generate_candidate(columns,file):
+    header = identify_header(file)
+    predicted_labels = generate_header(file)
+    if not header:
+        columns = predicted_labels
+    sensitive =['age','area','nation','country','nationality','sex','gender','ethnicity','race']
+    candidate = []
+    age_attribute = []
+    name = gender = age = country = race = ethnicity = False
+    for i in zip(columns, predicted_labels):
+        if i[0].lower() in sensitive or i[1].lower() in sensitive:
+            candidate.append(i[0])
+        if i[0].lower() in ['name','first_name','first name'] or i[1].lower() in ['name','first_name','first name']:
+            name = i[0]
+        if i[0].lower() in ['sex','gender'] or i[1].lower() in ['sex','gender']:
+            gender = i[0]
+        if i[0].lower() in ['age'] or i[1].lower() in ['age']:
+            age = i[0]
+            age_attribute.append(i[0])
+        if i[0].lower() in ['country'] or i[1].lower() in ['country']:
+            country = i[0]
+        if i[0].lower() in ['race'] or i[1].lower() in ['race']:
+            race = i[0]
+        if i[0].lower() in ['ethnicity'] or i[1].lower() in ['ethnicity']:
+            ethnicity = i[0]
+    return header,predicted_labels , candidate, name, gender, age, country, race, ethnicity,age_attribute
+    
+
 if __name__ == "__main__":
-    tmp_samples = pd.read_csv()
+    gp = GenderPredictor()
+    gp.train_and_test()
+    

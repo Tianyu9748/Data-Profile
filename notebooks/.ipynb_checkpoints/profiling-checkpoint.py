@@ -123,7 +123,7 @@ def preprocess_before_count(tmp,name,gender):
         #if filter_categories(tmp, age):
         #tmp[age] = tmp[age].apply(lambda x: trans_age(x))
     if name and (gender == False):
-        gender = 'Pred'
+        gender = 'Predict'
         # Name attribute exists, but gender attribute not exists
         pred_gender = []
         for i in tmp[name]:
@@ -143,6 +143,7 @@ def process_df(tmp,cand,age):
             for j in value:
                 MUP = True
                 for exist_mup in mup:
+                    #if frozenset(exist_mup).issubset(frozenset(j)):
                     if all( elt in list(j) for elt in exist_mup):
                         MUP = False
                         for z in att:
@@ -160,7 +161,7 @@ def process_df(tmp,cand,age):
                         mup.append(list(j))
     return mup, uncover
 
-def generate_df(dataset_ID,age,gender,race,ethnicity,country,mup,uncover):
+def generate_df(dataset_ID,age,gender,race,ethnicity,country,mup,uncover,cur_path):
     tmp_info = pd.DataFrame(columns = ['Dataset_ID','Age','Gender','Race','Ethnicity','Country','Maximal Uncovered Pattern(Sensitive)','Uncovered Attributes','Report'])
     tmp_info.at[0,'Dataset_ID'] = dataset_ID
     if age:
@@ -190,7 +191,7 @@ def generate_df(dataset_ID,age,gender,race,ethnicity,country,mup,uncover):
         tmp_info.at[0,'Uncovered Attributes'] = None
     else:
         tmp_info.at[0,'Uncovered Attributes'] = uncover
-    tmp_info.at[0,'Report'] = 'report/'+dataset_ID+'.html'
+    tmp_info.at[0,'Report'] = p+'/report/'+dataset_ID+'.html'
     return tmp_info
     
 def make_clickable(url):

@@ -1,1 +1,0 @@
-{'native.country', 'sex', 'age', 'race', 'hours.per.week'}

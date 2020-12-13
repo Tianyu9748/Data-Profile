@@ -1,3 +1,5 @@
+# Author: Tianyu Wang
+# Course: CS576
 import sys
 from pandas_profiling import ProfileReport
 import matplotlib.pyplot as plt

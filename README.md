@@ -1,4 +1,4 @@
-# Final Proect for CS576, Tianyu Wang
+# Final Proect for CS576, Max Wang， teammate： Moshiul Azam
 Aim to generate basic information for each data table in the open data lake, focus on sensitive attributes, race, gender, country, age, .etc
 
 Sherlock is used to predict header to filter out sensitive attributes. Currently, I just add MUP, Maximal Uncoverd Pattern, to the result table, future I might visualize the output. MUP is the defined as same as Assessing and Remedying Coveragefor a Given Dataset, Abolfazl Asudeh, Zhongjun Jin, H. V. Jagadish, 2019.

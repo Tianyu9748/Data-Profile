@@ -1,0 +1,19 @@
+slide-2:
+Every public dataset naively assums that is meets the criteria for applying to application. Like a Linear Regression task expects that the dataset to have normal distribution of it's attributes. A prediction task expectes that the datset sample is representative of overall population.
+slide-3:
+The goal of our system having in mind that Responsible data science preactics is to create a system that will provide any data scientist the tools to measure and modify any dataset before using it on real-world aplication. like 1. is the dataset is a completely represent the whole data structure. 2. does any attribute of the dataset has biases over other attributes.3. Overall correctness of the dataset.
+slide-4:
+Expanding on above idea , we are presenting Datset nutrition label, a set of visual widgets to focus on diffirent aspects of the dataset and each attributes seperetly.
+slide-5:
+A functional dependency (FD) is a relationship between two attributes, typically between the PK and other non-key attributes within a table. For any relation R, attribute Y is functionally dependent on attribute X, if for every valid instance of X, that value of X uniquely determines the value of Y. Which is way to know , if our dataset has any biases within it's attributes.
+slide-6:
+Correlartion is another to know that if distribution of our dataset is normal. It is heat-map showing how much each of the atttributes are related with each other . Cooler it is the better , except or that diagonal hot line.Which is expected.
+slide-7:
+Association Rules- In data science, association rules are used to find correlations and co-occurrences between data sets. They are ideally used to explain patterns in data from seemingly independent information repositories, such as relational databases and transactional databases. The act of using association rules is sometimes referred to as "association rule mining" or "mining associations."
+Association rules are created by searching data for frequent if-then patterns and using the criteria support and confidence to identify the most important relationships. Support is an indication of how frequently the items appear in the data. Confidence indicates the number of times the if-then statements are found true. A third metric, called lift, can be used to compare confidence with expected confidence, or how many times an if-then statement is expected to be found true.
+slide-8:
+Meta-data- for a given dataset, meta-data are descrption of each of it's attributes, like missing data, distinct values, mean, max, min values,We also provide histrogram of each attribute which provides probablity distribution of that perticular attribute.
+The report consist of the following: DataFrame overview, Each attribute on which DataFrame is defined, Correlations between attributes (Pearson Correlation and Spearman Correlation), and Two samples of DataFrame, from the beggining and from the ending.
+slide-9:
+Process of using the Program- Upload the dataset, then Let the datset process the data. Visulize and analyze the data presented by our program
+

@@ -49,13 +49,24 @@ Sherlock can be retrained by using the code in the `deploy.train_sherlock` modul
         └── sherlock_weights.h5
 
     ├── notebooks   <- Notebooks demonstrating the deployment of Sherlock using this repository.
-            └── retrain_sherlock.ipynb
-            └── 576_Twang.ipynb, the main file
             └── adult.csv, a commone dataset as test input file
             └── adult.xlsx, the output file of adult.csv input
             └── info.xlsx, the output file of data tables in open data lake, not complete information of all tables
-            └── profiling.py, necessary file to realize functions in 576_Twang.ipynb
             └── processed.txt, track which tables have been processed
+            
+            └── Metadata_Generation_Twang.ipynb, metadata generation process of data tables
+                └── profiling.py, necessary file to realize functions in 576_Twang.ipynb
+                
+            └── Dataset Nutrition Label_Mazam.ipynb, nutrition label generation process
+                └── ObtainEquivalences.py
+                └── Prune.py
+                └── GetFDs.py
+                └── binaryRepr.py
+                └── Apriori_Gen.py
+                └── testf.py
+            └── ex.html, output of Nutrition label generator 
+            └── ex.txt, output of Nutrition label generator
+            └── readme.txt, readme for Nutrition label generator
 
     ├── sherlock  <- Package files.
         ├── deploy  <- Files and modules to (re)train models on new data and generate predictions.
